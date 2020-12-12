@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #ccc;
+    }
+
+    #container {
+      max-width: 414px;
+      padding-top: 100px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+    }
+
+    .header>.row {
+      height: 30px;
+      display: inline-block;
+    }
+
+    .header input {
+      height: 24px;
+      width: 200px;
+      border-radius: 5px;
+      border: 1px solid #000;
+      outline: none;
+      background: transparent;
+    }
+
+    .computed {
+      height: 40px;
+      padding: 20px 0;
+      border-bottom: 2px dashed green;
+      border-top: 2px dashed green;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .computed input {
+      height: 40px;
+    }
+
+    .break-line {
+      padding: 10px 0;
+      border-bottom: 2px dashed green;
+      border-top: 2px dashed green;
+    }
+    .row {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <div class="header">
+      <div class="row"><label for="AB">AB</label> <span>=</span> <input type="text" id="AB"></div>
+      <div class="row"><label for="AD">AD</label> <span>=</span> <input type="text" id="AD"></div>
+      <div class="row"><label for="BD">BD</label> <span>=</span> <input type="text" id="BD"></div>
+      <div class="break-line">
+        <div class="row">已知上面三项，估算C点位置</div>
+        <div class="row">自动计算BC与CD长度，然后再生成最后的模型</div>
+        <div class="row">选择下方模型，生成对应的BC与CD值</div>
+        <select id="createBCandCD">
+          <option value="0">请选择对应的模型</option>
+          <option value="1">生成左足的BC与CD</option>
+          <option value="2">生成右足的BC与CD</option>
+          <option value="3">生成左右足的BC与CD</option>
+        </select>
+      </div>
+      <div class="row"><label for="BC">BC</label> <span>=</span> <input type="text" id="BC"></div>
+      <div class="row"><label for="CD">CD</label> <span>=</span> <input type="text" id="CD"></div>
+    </div>
+    <div class="computed">
+      <input type="button" value="左足估算值" id="resultLeft">
+      <input type="button" value="右足估算值" id="resultRight">
+      <input type="button" value="左右足估算值" id="resultAverage">
+    </div>
+    <div class="result">
+      <div><span>SABD=</span><span id="SabdResult"></span></div>
+      <div><span>SBCD=</span><span id="SbcdResult"></span></div>
+      <div><span>SABCD=</span><span id="SabcdResult"></span></div>
+      <div><span>S1最优模型=</span><span id="S1Result"></span></div>
+      <div><span>S2最优模型=</span><span id="S2Result"></span></div>
+    </div>
+  </div>
+</body>
+<script>
+  const createBCandCD = document.getElementById("createBCandCD");
+  const ABbtn = document.getElementById("AB");
+  const ADbtn = document.getElementById("AD");
+  const BDbtn = document.getElementById("BD");
+
+  const BCbtn = document.getElementById("BC");
+  const CDbtn = document.getElementById("CD");
+  function getElements(id) {
+    return document.getElementById(id)
+  }
+  function getElementsValue(id) {
+    if (getElements(id).value === '') {
+      return 0
+    } else {
+      return Number(getElements(id).value)
+    }
+  }
+  getElements('resultLeft').addEventListener('click', function () {
+    getElements('SabdResult').innerHTML = 131.959 + getElementsValue('AB') * 2.384 + getElementsValue('AD') * 0.572 + getElementsValue('BD') * 2.466;
+    getElements('SbcdResult').innerHTML = 119.283 + getElementsValue('BD') * 1.842 + getElementsValue('BC') * 0.031 + getElementsValue('CD') * 2.741;
+    getElements('SabcdResult').innerHTML = 113.179 + getElementsValue('AB') * 1.307 + getElementsValue('AD') * 1.448 + getElementsValue('BC') * 0.385 + getElementsValue('CD') * 2.349;
+    getElements('S1Result').innerHTML = 132.216 + getElementsValue('CD') * 3.125;
+    getElements('S2Result').innerHTML = 113.777 + getElementsValue('CD') * 2.814 + getElementsValue('AD') * 1.932;
+  })
+  getElements('resultRight').addEventListener('click', function () {
+    getElements('SabdResult').innerHTML = 129.012 + getElementsValue('AB') * 2.269 + getElementsValue('AD') * 0.504 + getElementsValue('BD') * 2.916;
+    getElements('SbcdResult').innerHTML = 118.395 + getElementsValue('BD') * 1.655 + getElementsValue('BC') * 0.962 + getElementsValue('CD') * 1.831;
+    getElements('SabcdResult').innerHTML = 116.592 + getElementsValue('AB') * 1.181 + getElementsValue('AD') * 1.069 + getElementsValue('BC') * 1.297 + getElementsValue('CD') * 1.389;
+    getElements('S1Result').innerHTML = 133.107 + getElementsValue('CD') * 3.030;
+    getElements('S2Result').innerHTML = 117.789 + getElementsValue('CD') * 2.484 + getElementsValue('AD') * 1.949;
+  })
+  getElements('resultAverage').addEventListener('click', function () {
+    getElements('SabdResult').innerHTML = 125.455 + getElementsValue('AB') * 2.595 + getElementsValue('AD') * 0.630 + getElementsValue('BD') * 2.969;
+    getElements('SbcdResult').innerHTML = 112.658 + getElementsValue('BD') * 1.842 + getElementsValue('BC') * 0.191 + getElementsValue('CD') * 3.038;
+    getElements('SabcdResult').innerHTML = 109.404 + getElementsValue('AB') * 1.204 + getElementsValue('AD') * 1.405 + getElementsValue('BC') * 0.494 + getElementsValue('CD') * 2.572;
+    getElements('S1Result').innerHTML = 124.328 + getElementsValue('CD') * 3.702;
+    getElements('S2Result').innerHTML = 109.332 + getElementsValue('CD') * 3.136 + getElementsValue('AD') * 1.935;
+  })
+  // 生成BC与CD的方法
+  function handleCreateBCandCDFun(e) {
+    console.log(e.target.value);
+    const value = e.target.value;
+    if (+value === 0) {
+      generateBCCD(0);
+      // alert("请选择对应的模型!");
+      return;
+    }
+    if (+value === 1) {
+      generateBCCD(1);
+    }
+    if (+value === 2) {
+      generateBCCD(2);
+    }
+    if (+value === 3) {
+      generateBCCD(3);
+    }
+  }
+
+  function generateBCCD(type) {
+    if (type === 0) {
+      CDbtn.value = '';
+      BCbtn.value = '';
+    }
+    if (type === 1) {
+      const s = 131.959 + getElementsValue('AB') * 2.384 + getElementsValue('AD') * 0.572 + getElementsValue('BD') * 2.466;
+      // CD值默认按照最优模型L1计算
+      const cd = (s - 132.216) / 3.125;
+      CDbtn.value = cd;
+      // BC值默认按照最优模型SABCD计算
+      BCbtn.value = (s - (113.179 + getElementsValue('AB') * 1.307 + getElementsValue('AD') * 1.448 + cd * 2.349)) / 0.385;
+    }
+    if (type === 2) {
+      const s = 129.012 + getElementsValue('AB') * 2.269 + getElementsValue('AD') * 0.504 + getElementsValue('BD') * 2.916;
+      // CD值默认按照最优模型L1计算
+      const cd = (s - 133.107) / 3.030;
+      CDbtn.value = cd;
+      // BC值默认按照最优模型SABCD计算
+      BCbtn.value = (s - (116.592 + getElementsValue('AB') * 1.181 + getElementsValue('AD') * 1.069 + cd * 1.389)) / 1.297;
+    }
+    if (type === 3) {
+      const s = 125.455 + getElementsValue('AB') * 2.595 + getElementsValue('AD') * 0.630 + getElementsValue('BD') * 2.969;
+      // CD值默认按照最优模型L1计算
+      const cd = (s - 124.328) / 3.702;
+      CDbtn.value = cd;
+      // BC值默认按照最优模型SABCD计算
+      BCbtn.value = (s - (109.404 + getElementsValue('AB') * 1.204 + getElementsValue('AD') * 1.405 + cd * 2.572)) / 0.494;
+    }
+  }
+
+  createBCandCD.addEventListener('change', handleCreateBCandCDFun);
+</script>
+
+</html>
